@@ -1,0 +1,19 @@
+{
+    "name": "Candle #2",
+    "symbol": "RINKYA",
+    "image": "https://gateway.pinata.cloud/ipfs/QmTxQkLojvYwfQWCjkfkFKWKKY5ZJVgCjb3RF9ycYKzteL/2.jpeg",
+    "properties": {
+      "files": [{ "uri": "2.jpeg", "type": "image/jpeg" }],
+      "category": "image",
+      "creators": [
+        {
+          "address": "6JkoLLb7mpip4GXk57Q7ZkuPHTCv4MZyuXKrSRZzDU3C",
+          "share": 100
+        }
+      ]
+    },
+    "description": "A set of my sketches as NFTs for the Solana blockchain",
+    "seller_fee_basis_points": 500,
+    "attributes": [{ "trait_type": "Number", "value": "2" }]
+  }
+  

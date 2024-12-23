@@ -1,0 +1,14 @@
+@use "base/base";
+
+@use "components/scrollToTop";
+@use "components/navbar";
+@use "components/footer";
+@use "components/card";
+
+@use "sections/home";
+@use "sections/clients";
+@use "sections/superRare";
+@use "sections/release";
+@use "sections/signup";
+@use "sections/like";
+@use "sections/free";
