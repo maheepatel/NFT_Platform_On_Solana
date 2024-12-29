@@ -1,6 +1,16 @@
 import superEth from "../assets/supereth.png";
 
-const Card = ({ image, series, title, price, tag, time }) => {
+const Card = ({
+  image,
+  series,
+  title,
+  price,
+  tag,
+  time,
+  isMinting = false,
+  onMint,
+  isWalletConnected = false,
+}) => {
   return (
     <div className="card">
       <div className="card-image">
@@ -15,13 +25,26 @@ const Card = ({ image, series, title, price, tag, time }) => {
           <h4 className="card-title">{title}</h4>
           <div className="card-price">
             <img src={superEth} alt="super eth" />
-            <h4>{price} ETH</h4>
+            <h4>{price} SOL</h4>
           </div>
         </div>
         <div className="card-sub-details">
           <span>#{tag}</span>
           <span>{time} day left</span>
         </div>
+        <button
+          className={`mint-button ${isMinting ? "minting" : ""} ${
+            !isWalletConnected ? "disabled" : ""
+          }`}
+          onClick={onMint}
+          disabled={isMinting || !isWalletConnected}
+        >
+          {!isWalletConnected
+            ? "Connect Wallet"
+            : isMinting
+            ? "Minting..."
+            : "Mint NFT"}
+        </button>
       </div>
     </div>
   );

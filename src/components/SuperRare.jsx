@@ -1,193 +1,281 @@
-import super1 from "../assets/super1.png";
-import super2 from "../assets/super2.png";
-import super3 from "../assets/super3.png";
-import super4 from "../assets/super4.png";
-import Card from "./Card";
+import { useEffect, useState } from "react";
+import * as anchor from "@coral-xyz/anchor";
+import { Program } from "@coral-xyz/anchor";
+import {
+  Connection,
+  PublicKey,
+  Keypair,
+  SystemProgram,
+  SYSVAR_RENT_PUBKEY,
+} from "@solana/web3.js";
+import {
+  TOKEN_PROGRAM_ID,
+  ASSOCIATED_TOKEN_PROGRAM_ID,
+} from "@solana/spl-token";
+import { useWallet } from "@solana/wallet-adapter-react";
+import Card from "./Card.jsx";
+import { IDL } from "../anchor/idl.ts";
 
-import img0 from "../assets/Rinkus_sketches/0.jpeg";
-import img1 from "../assets/Rinkus_sketches/1.jpeg";
-import img2 from "../assets/Rinkus_sketches/2.jpeg";
-import img3 from "../assets/Rinkus_sketches/3.jpeg";
-import img4 from "../assets/Rinkus_sketches/4.jpeg";
-import img5 from "../assets/Rinkus_sketches/5.jpeg";
-import img6 from "../assets/Rinkus_sketches/6.jpeg";
-import img7 from "../assets/Rinkus_sketches/7.jpg";
-import img8 from "../assets/Rinkus_sketches/8.jpeg";
-import img9 from "../assets/Rinkus_sketches/9.jpeg";
-import img10 from "../assets/Rinkus_sketches/10.jpeg";
-import img11 from "../assets/Rinkus_sketches/11.jpeg";
-import img12 from "../assets/Rinkus_sketches/12.jpeg";
-import img13 from "../assets/Rinkus_sketches/13.jpeg";
-import img14 from "../assets/Rinkus_sketches/14.jpeg";
-import img15 from "../assets/Rinkus_sketches/15.jpeg";
-import img16 from "../assets/Rinkus_sketches/16.jpeg";
-import img17 from "../assets/Rinkus_sketches/17.jpeg";
-import img18 from "../assets/Rinkus_sketches/18.jpeg";
-import img19 from "../assets/Rinkus_sketches/19.jpeg";
+// Constants
+const PROGRAM_ID = new PublicKey(
+  "65USePYd9nzjHHBFrSp9oxWjZKVJacE2Hx28aFpPkVpn"
+);
+const METADATA_PROGRAM_ID = new PublicKey(
+  "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
+);
 
+// Base URI for metadata
+const BASE_URI =
+  "http://127.0.0.1:8080/ipfs/QmfVuPfBXAiGdoibQrQsUTkQsxwDgDMUuFBVbyQaZmVDDW";
+// "https://gateway.pinata.cloud/ipfs/QmTxQkLojvYwfQWCjkfkFKWKKY5ZJVgCjb3RF9ycYKzteL";
+// const BACKEND_URL = "http://localhost:5000";
 const SuperRare = () => {
-  const data = [
-    {
-      image: img0,
-      series: "Gloop Series",
-      title: "Purple Man",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img1,
-      series: "Gloop Series",
-      title: "Beige",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img2,
-      series: "Gloop Series",
-      title: "Red Man",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img3,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img4,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img5,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img6,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img7,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img8,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img9,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img10,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img11,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img12,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img13,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img14,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img15,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img16,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img17,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img18,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-    {
-      image: img19,
-      series: "Gloop Series",
-      title: "Green",
-      price: 2.99,
-      tag: 12983,
-      time: 1,
-    },
-  ];
+  const wallet = useWallet();
+  const [nfts, setNfts] = useState([]);
+  const [status, setStatus] = useState("");
+  const [mintingId, setMintingId] = useState(null);
+
+  const getProvider = () => {
+    const connection = new Connection("https://api.devnet.solana.com");
+    const provider = new anchor.AnchorProvider(connection, wallet, {
+      preflightCommitment: "processed",
+    });
+    anchor.setProvider(provider);
+    return provider;
+  };
+
+  const getProgram = () => {
+    const provider = getProvider();
+    return new anchor.Program(IDL, PROGRAM_ID, provider);
+  };
+
+  // Fetch metadata for NFTs
+  useEffect(() => {
+    const fetchMetadata = async () => {
+      const nftData = [];
+      for (let i = 0; i < 20; i++) {
+        try {
+          const response = await fetch(`${BASE_URI}/${i}.json`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) {
+            throw new Error(`Failed to fetch metadata for NFT ${i}`);
+          }
+          const metadata = await response.json();
+
+          nftData.push({
+            id: i,
+            name: metadata.name || `NFT #${i}`,
+            symbol: metadata.symbol || "RINKYA",
+            image: metadata.image || `${BASE_URI}/${i}.jpeg`,
+            description: metadata.description || "No description available",
+            price: 2.99,
+            tag: 12983,
+            time: 1,
+          });
+        } catch (error) {
+          console.error(`Failed to fetch metadata for NFT ${i}:`, error);
+        }
+      }
+      setNfts(nftData);
+    };
+
+    fetchMetadata();
+  }, []);
+
+  // const getProgram = () => {
+  //   const connection = new Connection("https://api.devnet.solana.com");
+  //   const provider = new anchor.AnchorProvider(connection, wallet, {
+  //     preflightCommitment: "processed",
+  //   });
+  //   return new Program(IDL, PROGRAM_ID, provider);
+  // };
+
+  console.log("nfts: ", nfts);
+
+  const mintNFT = async (nft) => {
+    console.log("nft", nft);
+
+    if (!wallet.connected || !wallet.publicKey) {
+      setStatus("Please connect your wallet first");
+      return;
+    }
+
+    try {
+      setStatus(`Starting to mint NFT: ${nft.name}...`);
+      setMintingId(nft.id);
+      const provider = getProvider();
+      const program = getProgram();
+      console.log("Provider: ", provider);
+      console.log(
+        "IDL Methods:",
+        program.idl.instructions.map((i) => i.name)
+      );
+
+      console.log("Program: ", program.methods);
+
+      const mint = Keypair.generate();
+      console.log("mint:", mint);
+
+      const associatedToken = await anchor.utils.token.associatedAddress({
+        mint: mint.publicKey,
+        owner: wallet.publicKey,
+      });
+
+      const [metadataAccount] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("metadata"),
+          METADATA_PROGRAM_ID.toBuffer(),
+          mint.publicKey.toBuffer(),
+        ],
+        METADATA_PROGRAM_ID
+      );
+
+      const [masterEditionAccount] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("metadata"),
+          METADATA_PROGRAM_ID.toBuffer(),
+          mint.publicKey.toBuffer(),
+          Buffer.from("edition"),
+        ],
+        METADATA_PROGRAM_ID
+      );
+
+      console.log("Program ID:", program.programId.toString());
+      // console.log(
+      //   "Arguments:",
+      //   nft.name,
+      //   nft.symbol,
+      //   `${BASE_URI}/${nft.id}.json`
+      // );
+      // console.log("Accounts:", {
+      //   signer: wallet.publicKey.toString(),
+      //   mint: mint.publicKey.toString(),
+      //   associatedTokenAccount: associatedToken.toString(),
+      //   metadataAccount: metadataAccount.toString(),
+      //   masterEditionAccount: masterEditionAccount.toString(),
+      // });
+
+      console.log(
+        "Minting Params:",
+        nft.name,
+        nft.symbol,
+        `${BASE_URI}/${nft.id}.json`
+      );
+      console.log("Available Methods:", program.methods);
+
+      // Log all parameters before creating the transaction
+      console.log("Transaction Parameters:", {
+        name: nft.name,
+        symbol: nft.symbol || "RINKYA",
+        uri: `${BASE_URI}/${nft.id}.json`,
+        accounts: {
+          signer: wallet.publicKey.toString(),
+          mint: mint.publicKey.toString(),
+          associatedTokenAccount: associatedToken.toString(),
+          metadataAccount: metadataAccount.toString(),
+          masterEditionAccount: masterEditionAccount.toString(),
+          tokenProgram: TOKEN_PROGRAM_ID.toString(),
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+          tokenMetadataProgram: METADATA_PROGRAM_ID.toString(),
+          systemProgram: SystemProgram.programId.toString(),
+          rent: SYSVAR_RENT_PUBKEY.toString(),
+        },
+      });
+      console.log("Starts here");
+
+      try {
+        const simulation = await program.methods
+          .initNft(
+            String(nft.name),
+            String(nft.symbol || "RINKYA"),
+            String(`${BASE_URI}/${nft.id}.json`)
+          )
+          .accounts({
+            signer: wallet.publicKey,
+            mint: mint.publicKey,
+            associatedTokenAccount: associatedToken,
+            metadataAccount,
+            masterEditionAccount,
+            tokenProgram: TOKEN_PROGRAM_ID,
+            associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+            tokenMetadataProgram: METADATA_PROGRAM_ID,
+            systemProgram: SystemProgram.programId,
+            rent: SYSVAR_RENT_PUBKEY,
+          })
+          .signers([mint])
+          .simulate();
+
+        console.log("Simulation successful:", simulation);
+
+        // const tx = await program.methods
+        //   .initNft(
+        //     nft.name,
+        //     nft.symbol || "RINKYA",
+        //     `${BASE_URI}/${nft.id}.json`
+        //   )
+        //   .accounts({
+        //     signer: wallet.publicKey,
+        //     mint: mint.publicKey,
+        //     associatedTokenAccount: associatedToken,
+        //     metadataAccount,
+        //     masterEditionAccount,
+        //     tokenProgram: TOKEN_PROGRAM_ID,
+        //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+        //     tokenMetadataProgram: METADATA_PROGRAM_ID,
+        //     systemProgram: SystemProgram.programId,
+        //     rent: SYSVAR_RENT_PUBKEY,
+        //   })
+        //   .signers([mint])
+        //   // .simulate();
+        //   .rpc();
+        console.log("Ends here");
+
+        console.log("Transaction successful:", tx);
+      } catch (simError) {
+        console.error("Simulation error details:", {
+          error: simError,
+          message: simError.message,
+          logs: simError.logs,
+          stack: simError.stack,
+        });
+        throw simError;
+      }
+      // await program.methods
+      //   .initNft(nft.name, nft.symbol, `${BASE_URI}/${nft.id}.json`)
+      //   .accounts({
+      //     signer: wallet.publicKey,
+      //     mint: mint.publicKey,
+      //     associatedTokenAccount: associatedToken,
+      //     metadataAccount,
+      //     masterEditionAccount,
+      //     tokenProgram: TOKEN_PROGRAM_ID,
+      //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+      //     tokenMetadataProgram: METADATA_PROGRAM_ID,
+      //     systemProgram: anchor.web3.SystemProgram.programId,
+      //     rent: anchor.web3.SYSVAR_RENT_PUBKEY,
+      //   })
+      //   .signers([mint])
+      //   // .simulate();
+      //   .rpc();
+
+      console.log("Txn sig:", tx);
+
+      setStatus(
+        `Successfully minted ${
+          nft.name
+        }! Mint address: ${mint.publicKey.toString()}`
+      );
+    } catch (error) {
+      console.error("Error minting NFT:", error);
+      setStatus(`Error minting NFT: ${error.message}`);
+    } finally {
+      setMintingId(null);
+    }
+  };
+
   return (
     <div className="super-rare">
       <div className="title-container">
@@ -198,6 +286,23 @@ const SuperRare = () => {
         </p>
       </div>
       <div className="cards">
+        {nfts.map((nft) => (
+          <Card
+            key={nft?.id}
+            image={nft?.image}
+            series="Rinkya Collection"
+            title={nft?.name}
+            price={nft?.price}
+            tag={nft?.tag}
+            time={nft?.time}
+            isMinting={mintingId === nft?.id}
+            onMint={() => mintNFT(nft)}
+            isWalletConnected={wallet.connected}
+          />
+        ))}
+      </div>
+
+      {/* <div className="cards">
         {data.map(({ image, series, title, price, tag, time }, index) => (
           <Card
             key={index}
@@ -209,7 +314,7 @@ const SuperRare = () => {
             time={time}
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };
