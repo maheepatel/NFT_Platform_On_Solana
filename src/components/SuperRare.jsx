@@ -28,7 +28,7 @@ const METADATA_PROGRAM_ID = new PublicKey(
 const BASE_URI =
   "http://127.0.0.1:8080/ipfs/QmfVuPfBXAiGdoibQrQsUTkQsxwDgDMUuFBVbyQaZmVDDW";
 // "https://gateway.pinata.cloud/ipfs/QmTxQkLojvYwfQWCjkfkFKWKKY5ZJVgCjb3RF9ycYKzteL";
-// const BACKEND_URL = "http://localhost:5000";
+
 const SuperRare = () => {
   const wallet = useWallet();
   const [nfts, setNfts] = useState([]);
@@ -53,7 +53,7 @@ const SuperRare = () => {
   useEffect(() => {
     const fetchMetadata = async () => {
       const nftData = [];
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 4; i++) {
         try {
           const response = await fetch(`${BASE_URI}/${i}.json`, {
             headers: {
@@ -172,16 +172,16 @@ const SuperRare = () => {
         symbol: nft.symbol || "RINKYA",
         uri: `${BASE_URI}/${nft.id}.json`,
         accounts: {
-          signer: wallet.publicKey.toString(),
-          mint: mint.publicKey.toString(),
-          associatedTokenAccount: associatedToken.toString(),
-          metadataAccount: metadataAccount.toString(),
-          masterEditionAccount: masterEditionAccount.toString(),
-          tokenProgram: TOKEN_PROGRAM_ID.toString(),
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
-          tokenMetadataProgram: METADATA_PROGRAM_ID.toString(),
-          systemProgram: SystemProgram.programId.toString(),
-          rent: SYSVAR_RENT_PUBKEY.toString(),
+          signer: wallet.publicKey,
+          mint: mint.publicKey,
+          associatedTokenAccount: associatedToken,
+          metadataAccount: metadataAccount,
+          masterEditionAccount: masterEditionAccount,
+          tokenProgram: TOKEN_PROGRAM_ID,
+          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+          tokenMetadataProgram: METADATA_PROGRAM_ID,
+          systemProgram: SystemProgram.programId,
+          rent: SYSVAR_RENT_PUBKEY,
         },
       });
       console.log("Starts here");
@@ -189,9 +189,9 @@ const SuperRare = () => {
       try {
         const simulation = await program.methods
           .initNft(
-            String(nft.name),
-            String(nft.symbol || "RINKYA"),
-            String(`${BASE_URI}/${nft.id}.json`)
+            nft.name,
+            nft.symbol || "RINKYA",
+            `${BASE_URI}/${nft.id}.json`
           )
           .accounts({
             signer: wallet.publicKey,
