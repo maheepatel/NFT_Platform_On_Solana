@@ -14,12 +14,13 @@ import {
 } from "@solana/spl-token";
 import { useWallet } from "@solana/wallet-adapter-react";
 import Card from "./Card.jsx";
-import { IDL } from "../anchor/idl.ts";
+import IDL from "../anchor/idl.json";
 
 // Constants
 const PROGRAM_ID = new PublicKey(
   "65USePYd9nzjHHBFrSp9oxWjZKVJacE2Hx28aFpPkVpn"
 );
+
 const METADATA_PROGRAM_ID = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
@@ -46,7 +47,7 @@ const SuperRare = () => {
 
   const getProgram = () => {
     const provider = getProvider();
-    return new anchor.Program(IDL, PROGRAM_ID, provider);
+    return new anchor.Program(IDL, provider);
   };
 
   // Fetch metadata for NFTs
@@ -67,10 +68,10 @@ const SuperRare = () => {
 
           nftData.push({
             id: i,
-            name: metadata.name || `NFT #${i}`,
-            symbol: metadata.symbol || "RINKYA",
-            image: metadata.image || `${BASE_URI}/${i}.jpeg`,
-            description: metadata.description || "No description available",
+            name: metadata?.name || `NFT #${i}`,
+            symbol: metadata?.symbol || "RINKYA",
+            image: metadata?.image || `${BASE_URI}/${i}.jpeg`,
+            description: metadata?.description || "No description available",
             price: 2.99,
             tag: 12983,
             time: 1,
@@ -85,43 +86,28 @@ const SuperRare = () => {
     fetchMetadata();
   }, []);
 
-  // const getProgram = () => {
-  //   const connection = new Connection("https://api.devnet.solana.com");
-  //   const provider = new anchor.AnchorProvider(connection, wallet, {
-  //     preflightCommitment: "processed",
-  //   });
-  //   return new Program(IDL, PROGRAM_ID, provider);
-  // };
-
-  console.log("nfts: ", nfts);
-
   const mintNFT = async (nft) => {
-    console.log("nft", nft);
-
     if (!wallet.connected || !wallet.publicKey) {
       setStatus("Please connect your wallet first");
       return;
     }
 
     try {
-      setStatus(`Starting to mint NFT: ${nft.name}...`);
-      setMintingId(nft.id);
+      setStatus(`Starting to mint NFT: ${nft?.name}...`);
+      setMintingId(nft?.id);
       const provider = getProvider();
       const program = getProgram();
       console.log("Provider: ", provider);
       console.log(
         "IDL Methods:",
-        program.idl.instructions.map((i) => i.name)
+        program?.idl?.instructions.map((i) => i.name)
       );
 
-      console.log("Program: ", program.methods);
-
       const mint = Keypair.generate();
-      console.log("mint:", mint);
 
       const associatedToken = await anchor.utils.token.associatedAddress({
-        mint: mint.publicKey,
-        owner: wallet.publicKey,
+        mint: mint?.publicKey,
+        owner: wallet?.publicKey,
       });
 
       const [metadataAccount] = PublicKey.findProgramAddressSync(
@@ -143,49 +129,6 @@ const SuperRare = () => {
         METADATA_PROGRAM_ID
       );
 
-      console.log("Program ID:", program.programId.toString());
-      // console.log(
-      //   "Arguments:",
-      //   nft.name,
-      //   nft.symbol,
-      //   `${BASE_URI}/${nft.id}.json`
-      // );
-      // console.log("Accounts:", {
-      //   signer: wallet.publicKey.toString(),
-      //   mint: mint.publicKey.toString(),
-      //   associatedTokenAccount: associatedToken.toString(),
-      //   metadataAccount: metadataAccount.toString(),
-      //   masterEditionAccount: masterEditionAccount.toString(),
-      // });
-
-      console.log(
-        "Minting Params:",
-        nft.name,
-        nft.symbol,
-        `${BASE_URI}/${nft.id}.json`
-      );
-      console.log("Available Methods:", program.methods);
-
-      // Log all parameters before creating the transaction
-      console.log("Transaction Parameters:", {
-        name: nft.name,
-        symbol: nft.symbol || "RINKYA",
-        uri: `${BASE_URI}/${nft.id}.json`,
-        accounts: {
-          signer: wallet.publicKey,
-          mint: mint.publicKey,
-          associatedTokenAccount: associatedToken,
-          metadataAccount: metadataAccount,
-          masterEditionAccount: masterEditionAccount,
-          tokenProgram: TOKEN_PROGRAM_ID,
-          associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-          tokenMetadataProgram: METADATA_PROGRAM_ID,
-          systemProgram: SystemProgram.programId,
-          rent: SYSVAR_RENT_PUBKEY,
-        },
-      });
-      console.log("Starts here");
-
       try {
         const simulation = await program.methods
           .initNft(
@@ -206,34 +149,9 @@ const SuperRare = () => {
             rent: SYSVAR_RENT_PUBKEY,
           })
           .signers([mint])
-          .simulate();
+          .rpc();
 
         console.log("Simulation successful:", simulation);
-
-        // const tx = await program.methods
-        //   .initNft(
-        //     nft.name,
-        //     nft.symbol || "RINKYA",
-        //     `${BASE_URI}/${nft.id}.json`
-        //   )
-        //   .accounts({
-        //     signer: wallet.publicKey,
-        //     mint: mint.publicKey,
-        //     associatedTokenAccount: associatedToken,
-        //     metadataAccount,
-        //     masterEditionAccount,
-        //     tokenProgram: TOKEN_PROGRAM_ID,
-        //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-        //     tokenMetadataProgram: METADATA_PROGRAM_ID,
-        //     systemProgram: SystemProgram.programId,
-        //     rent: SYSVAR_RENT_PUBKEY,
-        //   })
-        //   .signers([mint])
-        //   // .simulate();
-        //   .rpc();
-        console.log("Ends here");
-
-        console.log("Transaction successful:", tx);
       } catch (simError) {
         console.error("Simulation error details:", {
           error: simError,
@@ -243,25 +161,6 @@ const SuperRare = () => {
         });
         throw simError;
       }
-      // await program.methods
-      //   .initNft(nft.name, nft.symbol, `${BASE_URI}/${nft.id}.json`)
-      //   .accounts({
-      //     signer: wallet.publicKey,
-      //     mint: mint.publicKey,
-      //     associatedTokenAccount: associatedToken,
-      //     metadataAccount,
-      //     masterEditionAccount,
-      //     tokenProgram: TOKEN_PROGRAM_ID,
-      //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      //     tokenMetadataProgram: METADATA_PROGRAM_ID,
-      //     systemProgram: anchor.web3.SystemProgram.programId,
-      //     rent: anchor.web3.SYSVAR_RENT_PUBKEY,
-      //   })
-      //   .signers([mint])
-      //   // .simulate();
-      //   .rpc();
-
-      console.log("Txn sig:", tx);
 
       setStatus(
         `Successfully minted ${
