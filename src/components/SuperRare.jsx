@@ -17,18 +17,14 @@ import Card from "./Card.jsx";
 import IDL from "../anchor/idl.json";
 
 // Constants
-const PROGRAM_ID = new PublicKey(
-  "65USePYd9nzjHHBFrSp9oxWjZKVJacE2Hx28aFpPkVpn"
-);
-
 const METADATA_PROGRAM_ID = new PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 
 // Base URI for metadata
 const BASE_URI =
-  "http://127.0.0.1:8080/ipfs/QmfVuPfBXAiGdoibQrQsUTkQsxwDgDMUuFBVbyQaZmVDDW";
-// "https://gateway.pinata.cloud/ipfs/QmTxQkLojvYwfQWCjkfkFKWKKY5ZJVgCjb3RF9ycYKzteL";
+  // "http://127.0.0.1:8080/ipfs/QmfVuPfBXAiGdoibQrQsUTkQsxwDgDMUuFBVbyQaZmVDDW";
+  "https://gateway.pinata.cloud/ipfs/QmfVuPfBXAiGdoibQrQsUTkQsxwDgDMUuFBVbyQaZmVDDW";
 
 const SuperRare = () => {
   const wallet = useWallet();
@@ -56,11 +52,7 @@ const SuperRare = () => {
       const nftData = [];
       for (let i = 0; i < 4; i++) {
         try {
-          const response = await fetch(`${BASE_URI}/${i}.json`, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+          const response = await fetch(`${BASE_URI}/${i}.json`);
           if (!response.ok) {
             throw new Error(`Failed to fetch metadata for NFT ${i}`);
           }
