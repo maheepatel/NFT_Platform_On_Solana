@@ -11,6 +11,12 @@
       gap: 2rem;
       padding: 3rem;
       border-radius: 2rem;
+      .image {
+        img {
+          height: 5rem;
+          width: 4rem;
+        }
+      }
       .title {
         color: var(--accent-color1);
       }

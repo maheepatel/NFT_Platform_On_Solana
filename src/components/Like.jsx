@@ -1,4 +1,4 @@
-import eth1 from "../assets/eth1.png";
+import eth1 from "../assets/solana.png";
 import eth2 from "../assets/eth2.png";
 
 const Like = () => {
